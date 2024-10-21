@@ -1,5 +1,7 @@
 import { config } from '../config/config.js';
 import { PACKET_TYPE } from '../constants/header.js';
+import { getHandlerById } from '../handlers/index.js';
+import { getUserById } from '../sessions/user.session.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 
 /**
@@ -42,11 +44,21 @@ export const onData = (socket) => async (data) => {
           break;
         case PACKET_TYPE.NORMAL:
           const { handlerId, userId, payload, sequence } = packetParser(packet);
-          console.log('------------------------');
-          console.log(`handlerId: ${handlerId}`);
-          console.log(`userId: ${userId}`);
-          console.log(`payload: ${payload}`);
-          console.log(`sequence: ${sequence}`);
+
+          const user = getUserById(userId);
+          if (user && user.sequence !== sequence) {
+            console.error('잘못된 호출값입니다.');
+          }
+
+          const handler = getHandlerById(handlerId);
+
+          await handler({ socket, userId, payload });
+
+        // console.log('------------------------');
+        // console.log(`handlerId: ${handlerId}`);
+        // console.log(`userId: ${userId}`);
+        // console.log(`payload: ${payload}`);
+        // console.log(`sequence: ${sequence}`);
       }
     } else {
       // 아직 전체 패킷이 도착하지 않았을 경우
