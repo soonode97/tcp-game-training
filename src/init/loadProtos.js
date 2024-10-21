@@ -52,7 +52,7 @@ export const loadProtos = async () => {
         protoMessages[packageName][type] = root.lookupType(typeName);
       }
     }
-    console.log(protoMessages);
+    // console.log(protoMessages);
 
     console.log(`Protobuf 파일 로드 완료.`);
   } catch (err) {
