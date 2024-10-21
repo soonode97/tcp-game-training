@@ -1,22 +1,9 @@
 import net from 'net';
 import initServer from './init/index.js';
 import { config } from './config/config.js';
+import { onConnection } from './events/onConnection.js';
 
-const server = net.createServer((socket) => {
-  console.log(`Client connected from: ${socket.remoteAddress}:${socket.remotePort}`);
-
-  socket.on('data', (data) => {
-    console.log(data);
-  });
-
-  socket.on('end', () => {
-    console.log('Client disconnected');
-  });
-
-  socket.on('error', (err) => {
-    console.error('Socket error:', err);
-  });
-});
+const server = net.createServer(onConnection);
 
 // 초기화작업이 정상적으로 이루어지면 서버가 실행되도록 함.
 initServer()
