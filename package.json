@@ -1,0 +1,29 @@
+{
+  "name": "tcp-game-training",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon ./server.js",
+    "start:main": "node ./server.js",
+    "start:client": "node ./client.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
+    "long": "^5.2.3",
+    "mysql2": "^3.11.3",
+    "protobufjs": "^7.4.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.12.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
+  }
+}
