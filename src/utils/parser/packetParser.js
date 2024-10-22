@@ -1,6 +1,7 @@
 import { getProtoTypeNameByHandlerId } from '../../handlers/index.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
+import CustomError from '../error/customError.js';
 
 export const packetParser = (data) => {
   // 패킷을 파싱하기 전 프로토파일을 불러온다.
@@ -15,7 +16,7 @@ export const packetParser = (data) => {
     // decode를 하게되면 common.proto에서 정의했던 message Packet 객체에 대한 내용이 담긴다.
     packet = Packet.decode(data);
   } catch (e) {
-    console.error(e);
+    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다.');
   }
 
   const handlerId = packet.handlerId;
@@ -26,7 +27,10 @@ export const packetParser = (data) => {
   // 2. 클라이언트 버전 체크 (검증1)
   // console.log(`Client Version: ${clientVersion}`);
   if (clientVersion !== config.client.version) {
-    console.error(`클라이언트 버전이 일치하지 않습니다.`);
+    throw new CustomError(
+      ErrorCodes.CLIENT_VERSION_MISMATCH,
+      '클라이언트 버전이 일치하지 않습니다.',
+    );
   }
 
   // -------------------------
@@ -48,7 +52,7 @@ export const packetParser = (data) => {
   try {
     payload = payloadType.decode(packet.payload);
   } catch (e) {
-    console.error(e);
+    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다.');
   }
 
   // 4. 패킷 구조가 잘못되었을 수 있으니 에러를 확인 (검증2)
@@ -56,7 +60,7 @@ export const packetParser = (data) => {
   // 하지만 위 decode에서 이런 과정을 거치기 때문에 의미가 크게 있지 않음.
   const errorMessage = payloadType.verify(payload);
   if (errorMessage) {
-    console.error(errorMessage);
+    throw new CustomError(ErrorCodes.INVALID_PACKET, '패킷 구조가 일치하지 않습니다.');
   }
 
   // 5. 필드가 비어있는 경우 => 필수 필드가 누락되어 있는 경우 처리 (검증3)
@@ -66,7 +70,7 @@ export const packetParser = (data) => {
   const missingFields = expectedFields.filter((field) => !actualFields.includes(field));
 
   if (missingFields.length > 0) {
-    console.log(`missingField가 있습니다: ${missingFields.join(', ')}`);
+    throw new CustomError(ErrorCodes.MISSING_FIELDS, '필수 필드가 누락되었습니다.');
   }
 
   return { handlerId, userId, payload, sequence };

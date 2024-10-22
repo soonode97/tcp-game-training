@@ -2,6 +2,7 @@
 
 import { HANDLER_IDS } from '../constants/handlerIds.js';
 import initialHandler from './user/initial.handler.js';
+import CustomError from '../utils/error/customError.js';
 
 /**
  * 기존 핸들러 매핑에서는
@@ -26,14 +27,14 @@ const handlers = {
 
 export const getHandlerById = (handlerId) => {
   if (!handlers[handlerId]) {
-    console.error(`핸들러를 찾을 수 없습니다: ${handlerId}`);
+    throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, '핸들러 아이디를 찾을 수 없습니다.');
   }
   return handlers[handlerId].handler;
 };
 
 export const getProtoTypeNameByHandlerId = (handlerId) => {
   if (!handlers[handlerId]) {
-    console.error(`프로토타입을 찾을 수 없습니다: ${handlerId}`);
+    throw new CustomError(ErrorCodes.UNKNOWN_PROTOTYPE_NAME, '프로토타입 이름을 찾을 수 없습니다.');
   }
   return handlers[handlerId].protoType;
 };
