@@ -28,5 +28,5 @@ export const createPingPacket = (timestamp) => {
   // 4. 핑 패킷에 메시지를 인코딩하여 만들어준다.
   const pingPacket = ping.encode(message).finish();
 
-  return makeNotification(pingPacket, PACKET_TYPE.Ping);
+  return makeNotification(pingPacket, 0);
 };

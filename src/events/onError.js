@@ -1,5 +1,6 @@
 import CustomError from '../utils/error/customError.js';
 import { removeUser } from '../sessions/user.session.js';
+import { handlerError } from '../utils/error/errorHandler.js';
 
 export const onError = (socket) => async (err) => {
   console.error('Socket error:', err);

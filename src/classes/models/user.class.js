@@ -26,7 +26,7 @@ class User {
     const now = Date.now();
 
     console.log(`[${this.id}] ping`);
-    this.socket.wrtie(createPingPacket(now));
+    this.socket.write(createPingPacket(now));
   }
 
   // RTT, 왕복 시간을 받았을 때 처리하기 위한 함수
@@ -35,6 +35,7 @@ class User {
     const now = Date.now();
 
     this.latency = (now - data.timestamp) / 2;
+    console.log(`Received pong from user ${this.id} at ${now} with latency ${this.latency}ms`);
   }
 }
 

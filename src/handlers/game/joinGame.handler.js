@@ -6,7 +6,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-const joinGameHandler = ({ socket, userId, payload }) => {
+const joinGameHandler = async ({ socket, userId, payload }) => {
   try {
     const { gameId } = payload;
 

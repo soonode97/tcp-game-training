@@ -7,7 +7,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 
-const createGameHandler = ({ socket, userId, payload }) => {
+const createGameHandler = async ({ socket, userId, payload }) => {
   try {
     const gameId = uuidv4();
     const gameSession = addGameSession(gameId);
