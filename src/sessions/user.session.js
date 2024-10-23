@@ -1,7 +1,9 @@
 import { userSessions } from './sessions.js';
+import User from '../classes/models/user.class.js';
 
 export const addUser = (socket, uuid) => {
-  const user = { socket, id: uuid, sequence: 0 };
+  // const user = { socket, id: uuid, sequence: 0 };
+  const user = new User(uuid, socket); // 위 구문을 클래스화 시켜서 전달하도록 함.
   userSessions.push(user);
   return user;
 };
@@ -21,7 +23,7 @@ export const removeUser = (socket) => {
 export const getNextSequence = (id) => {
   const user = getUserById(id);
   if (user) {
-    return ++user.sequence;
+    return user.getNextSequence();
   }
   return null;
 };
