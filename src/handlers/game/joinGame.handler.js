@@ -9,17 +9,21 @@ import { createResponse } from '../../utils/response/createResponse.js';
 const joinGameHandler = ({ socket, userId, payload }) => {
   try {
     const { gameId } = payload;
-    const gameSession = getGameSession(gameId);
 
+    // 게임 세션이 존재하는지 확인
+    const gameSession = getGameSession(gameId);
     if (!gameSession) {
       throw new CustomError(ErrorCodes.GAME_NOT_FOUND, '게임 세션을 찾을 수 없습니다.');
     }
 
+    // 유저가 존재하는지 확인
     const user = getUserById(userId);
     if (!user) {
       throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
     }
 
+    // 해당 세션에 유저가 이미 존재하는지 확인
+    // 지금은 연결하려는 세션에 한정하여 확인하지만 추후에는 어떤 세션이든 중복으로 참여가 불가한 세션에 있는지 확인하는 검증을 해야할듯 싶음.
     const existUser = gameSession.getUser(user.id);
 
     if (!existUser) {
