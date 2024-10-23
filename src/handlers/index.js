@@ -5,6 +5,7 @@ import initialHandler from './user/initial.handler.js';
 import CustomError from '../utils/error/customError.js';
 import createGameHandler from './game/createGame.handler.js';
 import joinGameHandler from './game/joinGame.handler.js';
+import updateLocationHandler from './game/updateLocation.handler.js';
 
 /**
  * 기존 핸들러 매핑에서는
@@ -32,6 +33,10 @@ const handlers = {
   [HANDLER_IDS.JOIN_GAME]: {
     handler: joinGameHandler,
     protoType: 'game.JoinGamePayload',
+  },
+  [HANDLER_IDS.UPDATE_LOCATION]: {
+    handler: updateLocationHandler,
+    protoType: 'game.UpdateLocationPayload',
   },
 };
 
