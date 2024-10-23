@@ -1,5 +1,6 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
 import { addUser } from '../../sessions/user.session.js';
+import { findUserByDeviceId, createUser, updateUserLogin } from '../../utils/db/user/user.db.js';
 import { handlerError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -8,13 +9,21 @@ const initialHandler = async ({ socket, userId, payload }) => {
   try {
     const { deviceId } = payload;
 
+    let user = await findUserByDeviceId(deviceId);
+
+    if (!user) {
+      user = await createUser(deviceId);
+    } else {
+      await updateUserLogin(user.id);
+    }
+
     // deviceId도 유저의 고유한 기기이기 때문에 uuid로 디바이스 아이디를 할당하도록 함.
     addUser(socket, deviceId);
 
     const initialResponse = createResponse(
       HANDLER_IDS.INITIAL,
       RESPONSE_SUCCESS_CODE,
-      { userId: deviceId },
+      { userId: user.id },
       deviceId,
     );
 

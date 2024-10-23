@@ -2,6 +2,7 @@ import { getProtoTypeNameByHandlerId } from '../../handlers/index.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
 import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 
 export const packetParser = (data) => {
   // 패킷을 파싱하기 전 프로토파일을 불러온다.
