@@ -18,7 +18,7 @@ const initialHandler = async ({ socket, userId, payload }) => {
     }
 
     // deviceId도 유저의 고유한 기기이기 때문에 uuid로 디바이스 아이디를 할당하도록 함.
-    addUser(socket, deviceId);
+    addUser(socket, user.id);
 
     const initialResponse = createResponse(
       HANDLER_IDS.INITIAL,
