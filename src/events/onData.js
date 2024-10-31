@@ -18,8 +18,8 @@ export const onData = (socket) => async (data) => {
       const packet = socket.buffer.subarray(totalHeaderLength, length);
 
       socket.buffer = socket.buffer.subarray(length);
-      console.log(`length: ${length}, packetType:${packetType}`);
-      console.log(`packet: ${packet}`);
+      // console.log(`length: ${length}, packetType:${packetType}`);
+      // console.log(`packet: ${packet}`);
 
       try {
         switch (packetType) {

@@ -15,8 +15,6 @@ export const packetNames = {
     Response: 'response.Response',
   },
   game: {
-    CreateGamePayload: 'game.CreateGamePayload',
-    JoinGamePayload: 'game.JoinGamePayload',
     Start: 'game.Start',
   },
 };

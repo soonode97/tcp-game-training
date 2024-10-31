@@ -10,7 +10,6 @@ const testDbConnection = async (pool, dbName) => {
 
 /** DB가 여러개가 있으니 모든 DB에 테스트를 보낼 수 있도록 만듦 */
 const testAllConnections = async (pools) => {
-  await testDbConnection(pools.GAME_DB, 'GAME_DB');
   await testDbConnection(pools.USER_DB, 'USER_DB');
 };
 
