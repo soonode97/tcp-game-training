@@ -9,9 +9,15 @@ class User {
     this.x = x;
     this.y = y;
     this.lastUpdateTime = Date.now();
+    this.dx = 0; // 마지막 x 위치
+    this.dy = 0; // 마지막 y 위치
+    this.speed = 3;
   }
 
   updatePosition(x, y) {
+    // 먼저 마지막 위치를 저장
+    this.dx = this.x;
+    this.dy = this.y;
     this.x = x;
     this.y = y;
     this.lastUpdateTime = Date.now();
@@ -26,20 +32,60 @@ class User {
 
   handlePong(data) {
     const now = Date.now();
-    // console.log(now, data.timestamp);
-    this.latency = (now - data.timestamp) / 2;
+    const timestamp = data.timestamp.toNumber();
+    this.latency = (now - timestamp) / 2;
     console.log(`Received pong from user ${this.id} at ${now} with latency ${this.latency}ms`);
   }
 
-  // 게임 세션의 모든 유저 중 가장 높은 레이턴시 값으로 계산할 것이기 때문에 인자로 latency를 받음
-  calculatePosition(latency) {
-    const timeDiff = latency / 1000; // ms이므로 초 단위로 바꿈
-    const speed = 1; // 거리 = 속력 * 시간인데, 속도를 1로 고정시키도록 함. (속도가 달라지면 계산식이 달라짐)
-    const distance = speed * timeDiff; // 현재 레이턴시를 1로 고정하고 있음.
+  // // 게임 세션의 모든 유저 중 가장 높은 레이턴시 값으로 계산할 것이기 때문에 인자로 latency를 받음
+  // calculatePosition(latency) {
+  //   if (this.x === this.dx && this.y === this.dy) {
+  //     return {
+  //       x: this.x,
+  //       y: this.y,
+  //     };
+  //   }
 
+  //   const timeDiff = (Date.now() - this.lastUpdateTime + latency) / 1000;
+
+  //   // 지연 시간 동안 이동한 거리 계산
+  //   const distance = this.speed * timeDiff;
+
+  //   // 예측된 위치 계산
+  //   const directionX = this.x !== this.dx ? Math.sign(this.x - this.dx) : 0;
+  //   const directionY = this.y !== this.dy ? Math.sign(this.y - this.dy) : 0;
+
+  //   return {
+  //     x: this.x + directionX * distance,
+  //     y: this.y + directionY * distance,
+  //   };
+  // }
+
+  calculatePosition(latency) {
+    if (this.x === this.dx && this.y === this.dy) {
+      return {
+        x: this.x,
+        y: this.y,
+      };
+    }
+
+    const timeDiff = (Date.now() - this.lastUpdateTime + latency) / 1000;
+
+    // 목표 지점까지의 거리 계산
+    const directionX = this.dx - this.x;
+    const directionY = this.dy - this.y;
+    const distanceToTarget = Math.sqrt(directionX ** 2 + directionY ** 2);
+
+    // 지연 시간 동안 이동할 거리 계산
+    const distance = this.speed * timeDiff;
+
+    // 목표 지점까지의 거리를 초과하지 않도록 비율로 계산
+    const ratio = Math.min(distance / distanceToTarget, 1);
+
+    // 예측된 위치 계산
     return {
-      x: this.x + distance,
-      y: this.y + distance,
+      x: this.x + directionX * ratio,
+      y: this.y + directionY * ratio,
     };
   }
 }

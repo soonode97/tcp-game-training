@@ -3,6 +3,7 @@
 export const packetNames = {
   common: {
     Packet: 'common.CommonPacket',
+    Ping: 'common.Ping',
   },
   initial: {
     InitialPayload: 'initial.InitialPayload',
