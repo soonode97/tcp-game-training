@@ -68,4 +68,4 @@ https://github.com/soonode97/tcp-node-sample
 
 - mysql 이 아닌 postgreSQL을 사용했습니다.
 
-- localhost 로 테스트해본 결과 캐릭터가 부드럽게 움직이지만 AWS 서버에서 배포하면 캐릭터의 움직임이 끊겨서 보입니다. (확인 결과 기본 ms가 300이상)
+- localhost 로 테스트해본 결과 캐릭터가 부드럽게 움직이지만 AWS 서버에서 배포하면 캐릭터의 움직임이 끊겨서 보입니다. (확인 결과 기본 latency가 300ms 이상)
