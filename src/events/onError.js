@@ -5,7 +5,7 @@ import { updateUserLocation } from '../utils/db/user/user.db.js';
 import { gameSessions } from '../sessions/sessions.js';
 
 export const onError = (socket) => async (error) => {
-  console.error(`Socket error: ${err}`);
+  console.error(`Socket error: ${error}`);
 
   // 이미 접속 및 DB에 저장된 유저이기 때문에 검증이 필요없음.
   const user = getUserBySocket(socket);

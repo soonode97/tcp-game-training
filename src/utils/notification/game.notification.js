@@ -30,7 +30,7 @@ export const createLocationPacket = (users) => {
 /** 게임 시작을 알려주기 위한 패킷 */
 export const gameStartPacket = (gameId, timestamp) => {
   const protoMessages = getProtoMessages();
-  const start = protoMessages.gameNotification.Start;
+  const start = protoMessages.game.Start;
 
   const payload = { gameId, timestamp };
   const message = start.create(payload);

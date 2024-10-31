@@ -3,6 +3,7 @@
 import { config } from '../../config/config.js';
 import { getProtoTypeNameByHandlerId } from '../../handlers/index.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
+import { getUserBySocket } from '../../sessions/user.session.js';
 import CustomError from '../errors/customError.js';
 import { ErrorCodes } from '../errors/errorCodes.js';
 
@@ -38,7 +39,7 @@ export const packetParser = (data) => {
   const [namespace, typeName] = protoTypeName.split('.');
 
   const payloadType = protoMessages[namespace][typeName];
-  console.log(namespace, typeName);
+  // console.log(namespace, typeName);
   let payload;
 
   try {
@@ -63,4 +64,16 @@ export const packetParser = (data) => {
   }
 
   return { handlerId, userId, payload };
+};
+
+export const pingPacketParser = (socket, packet) => {
+  const protoMessages = getProtoMessages();
+
+  const ping = protoMessages.common.Ping;
+  const pingMessage = ping.decode(packet);
+  const user = getUserBySocket(socket);
+  if (!user) {
+    throw new CustomError(ErrorCodes.USER_NOT_FOUND, '유저를 찾을 수 없습니다.');
+  }
+  return { user, pingMessage };
 };

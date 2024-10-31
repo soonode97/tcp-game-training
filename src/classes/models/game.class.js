@@ -3,11 +3,13 @@ import {
   createLocationPacket,
   gameStartPacket,
 } from '../../utils/notification/game.notification.js';
+import IntervalManager from '../managers/interval.manager.js';
 
 class Game {
   constructor(id) {
     this.id = id;
     this.users = [];
+    this.intervalManager = new IntervalManager();
     this.state = 'waiting';
   }
 
@@ -18,6 +20,8 @@ class Game {
     }
     this.users.push(user);
     console.log(`${this.id} 게임 세션의 유저 현황: ${JSON.stringify(this.users)}`);
+
+    this.intervalManager.addPlayer(user.id, user.ping.bind(user), 1000);
 
     if (this.users.length >= MAX_PLAYER_TO_GAME_SESSIONS) {
       setTimeout(() => {
@@ -35,6 +39,8 @@ class Game {
   }
 
   removeUser(userId) {
+    // 유저의 모든 인터벌 지우기
+    this.intervalManager.removePlayer(userId);
     // filter로 지우기
     this.users = this.users.filter((user) => user.id !== userId);
 
@@ -64,16 +70,30 @@ class Game {
   }
 
   getAllLocation(deviceId) {
-    // const maxLatency = this.getMaxLatency();
+    const maxLatency = this.getMaxLatency();
 
     const locationData = this.users
       .filter((user) => user.id !== deviceId)
       .map((user) => {
-        return { id: user.id, playerId: user.playerId, x: user.x, y: user.y };
+        const { x, y } = user.calculatePosition(maxLatency);
+        // console.log('여기는 서버에서 계산한 x y: ', x, y);
+        return { id: user.id, playerId: user.playerId, x, y };
       });
 
     return createLocationPacket(locationData);
   }
+
+  // getAllLocation(deviceId) {
+  //   const maxLatency = this.getMaxLatency();
+
+  //   const locationData = this.users.map((user) => {
+  //     const { x, y } = user.calculatePosition(maxLatency);
+  //     // console.log('여기는 서버에서 계산한 x y: ', x, y);
+  //     return { id: user.id, playerId: user.playerId, x, y };
+  //   });
+
+  //   return createLocationPacket(locationData);
+  // }
 }
 
 export default Game;
